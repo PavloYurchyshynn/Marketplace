@@ -4,6 +4,6 @@ namespace Marketplace.Core.Entities
 {
     public class PaymentMethod : BaseEntity
     {
-        public string Name { get; set; }
+        public string? Name { get; set; }
     }
 }

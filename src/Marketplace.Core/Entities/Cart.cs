@@ -4,5 +4,6 @@ namespace Marketplace.Core.Entities
 {
     public class Cart : BaseEntity
     {
+        public Product? Product;
     }
 }
