@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-// using Marketplace.Core.Entities;
+using Marketplace.Core.Entities;
 
 namespace Marketplace.DataAccess.Persistence
 {
@@ -13,14 +13,14 @@ namespace Marketplace.DataAccess.Persistence
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         { }
 
-        /*public DbSet<Product> Products { get; set; }
-        public DbSet<Cart> Cart { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<Cart> Carts { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Comment> Comments { get; set; }
-        public DbSet<CustomerInfo> CustomerInfo { get; set; }
+        public DbSet<CustomerInfo> CustomerInfos { get; set; }
         public DbSet<Order> Orders { get; set; }
-        public DbSet<PaymentMethod> PaymentMethod { get; set; }
+        public DbSet<PaymentMethod> PaymentMethods { get; set; }
         public DbSet<Promocode> Promocodes { get; set; }
-        public DbSet<Address> Address { get; set; }*/
+        public DbSet<Address> Addresses { get; set; }
     }
 }
