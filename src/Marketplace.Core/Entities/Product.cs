@@ -6,8 +6,8 @@ namespace Marketplace.Core.Entities
 {
     public class Product : BaseEntity
     {
-        public Cart? Cart { get; set; }
         public Order? Order { get; set; }
+        public ICollection<CartItem>? CartItems { get; set; }
         public ICollection<Category>? Category { get; set; }
         public ICollection<Comment>? Comment { get; set; }
 
