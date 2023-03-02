@@ -4,6 +4,7 @@ namespace Marketplace.Core.Entities
 {
     public class Address : BaseEntity
     {
+        public ICollection<CustomerInfo>? CustomerInfo { get; set; }
         public string? Country { get; set; }
         public string? State { get; set; }
         public string? City { get; set; }
