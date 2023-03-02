@@ -4,6 +4,7 @@ namespace Marketplace.Core.Entities
 {
     public class Cart : BaseEntity
     {
-        public Product? Product;
+        public ICollection<CartItem>? CartItems { get; set; }
+        public string? Status { get; set; }
     }
 }
