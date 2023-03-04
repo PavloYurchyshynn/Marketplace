@@ -1,3 +1,4 @@
+using Marketplace.API.DependencyInjection;
 using Marketplace.DataAccess.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,6 +10,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddDbContext<Context>(options => options.UseSqlServer(connection));
 builder.Services.AddSwaggerGen();
+builder.Services.AddRepositories();
 
 var app = builder.Build();
 
