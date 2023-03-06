@@ -5,6 +5,6 @@ namespace Marketplace.DataAccess.Repositories.Contracts
 {
     public class OrderRepository : BaseRepository<Order>, IOrderRepository
     {
-        public OrderRepository(Context context) : base(context) { }
+        public OrderRepository(MarketplaceContext context) : base(context) { }
     }
 }

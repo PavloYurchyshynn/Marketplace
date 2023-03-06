@@ -5,6 +5,6 @@ namespace Marketplace.DataAccess.Repositories.Contracts
 {
     public class CommentRepository : BaseRepository<Comment>, ICommentRepository
     {
-        public CommentRepository(Context context) : base(context) { }
+        public CommentRepository(MarketplaceContext context) : base(context) { }
     }
 }
