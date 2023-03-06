@@ -1,9 +1,17 @@
-﻿using Marketplace.DataAccess.Repositories.Contracts;
+﻿using Marketplace.DataAccess.Persistence;
+using Marketplace.DataAccess.Repositories.Contracts;
+using Microsoft.EntityFrameworkCore;
 
 namespace Marketplace.API.DependencyInjection
 {
     public static class DependencyInjectionConfiguration
     {
+        public static void AddDatabase(this IServiceCollection services, IConfiguration configuration)
+        {
+            string? connection = configuration.GetConnectionString("DefaultConnection");
+
+            services.AddDbContext<MarketplaceContext>(options => options.UseSqlServer(connection));
+        }
         public static void AddRepositories(this IServiceCollection services)
         {
             services.AddScoped<IAddressRepository, AddressRepository>();

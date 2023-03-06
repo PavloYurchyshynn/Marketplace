@@ -5,6 +5,6 @@ namespace Marketplace.DataAccess.Repositories.Contracts
 {
     public class CartItemRepository : BaseRepository<CartItem>, ICartItemRepository
     {
-        public CartItemRepository(Context context) : base(context) { }
+        public CartItemRepository(MarketplaceContext context) : base(context) { }
     }
 }

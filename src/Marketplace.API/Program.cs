@@ -4,12 +4,10 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-string? connection = builder.Configuration.GetConnectionString("DefaultConnection");
-
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddDbContext<Context>(options => options.UseSqlServer(connection));
 builder.Services.AddSwaggerGen();
+builder.Services.AddDatabase(builder.Configuration);
 builder.Services.AddRepositories();
 
 var app = builder.Build();

@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Marketplace.DataAccess.Persistence.Migrations
 {
-    [DbContext(typeof(Context))]
+    [DbContext(typeof(MarketplaceContext))]
     [Migration("20230302094707_AddAllRelationships")]
     partial class AddAllRelationships
     {

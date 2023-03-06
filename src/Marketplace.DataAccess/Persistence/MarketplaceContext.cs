@@ -3,9 +3,9 @@ using Marketplace.Core.Entities;
 
 namespace Marketplace.DataAccess.Persistence
 {
-    public class Context : DbContext
+    public class MarketplaceContext : DbContext
     {
-        public Context(DbContextOptions<Context> options)
+        public MarketplaceContext(DbContextOptions<MarketplaceContext> options)
             : base(options)
         { }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

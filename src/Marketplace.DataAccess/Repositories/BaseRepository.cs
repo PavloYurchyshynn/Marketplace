@@ -8,10 +8,10 @@ namespace Marketplace.DataAccess.Repositories
 {
     public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : BaseEntity
     {
-        protected readonly Context Context;
+        protected readonly MarketplaceContext Context;
         protected readonly DbSet<TEntity> DbSet;
 
-        protected BaseRepository(Context context)
+        protected BaseRepository(MarketplaceContext context)
         {
             Context = context;
             DbSet = context.Set<TEntity>();

@@ -5,6 +5,6 @@ namespace Marketplace.DataAccess.Repositories.Contracts
 {
     public class PaymentMethodRepository : BaseRepository<PaymentMethod>, IPaymentMethodRepository
     {
-        public PaymentMethodRepository(Context context) : base(context) { }
+        public PaymentMethodRepository(MarketplaceContext context) : base(context) { }
     }
 }

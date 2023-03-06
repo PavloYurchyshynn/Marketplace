@@ -5,6 +5,6 @@ namespace Marketplace.DataAccess.Repositories.Contracts
 {
     public class CategoryRepository : BaseRepository<Category>, ICategoryRepository
     {
-        public CategoryRepository(Context context) : base(context) { }
+        public CategoryRepository(MarketplaceContext context) : base(context) { }
     }
 }
