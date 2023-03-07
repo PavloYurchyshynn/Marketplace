@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Marketplace.Core.Entities;
 
 namespace Marketplace.DataAccess.Persistence
 {
-    public class MarketplaceContext : DbContext
+    public class MarketplaceContext : IdentityDbContext<IdentityUser>
     {
         public MarketplaceContext(DbContextOptions<MarketplaceContext> options)
             : base(options)
@@ -11,7 +13,9 @@ namespace Marketplace.DataAccess.Persistence
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         { }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-        { }
+        {
+            base.OnModelCreating(modelBuilder);
+        }
 
         public DbSet<Product> Products { get; set; }
         public DbSet<Cart> Carts { get; set; }
