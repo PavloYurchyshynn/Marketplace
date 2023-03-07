@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Marketplace.API.Controllers
 {
-    [Authorize(Roles = UserRoles.Seller)]
+    [Authorize(Roles = UserRoles.Admin)]
     [ApiController]
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
