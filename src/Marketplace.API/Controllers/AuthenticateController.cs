@@ -83,6 +83,21 @@ namespace Marketplace.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User creation failed! Please check user details and try again." });
             }
 
+            if (!await _roleManager.RoleExistsAsync(UserRoles.Seller))
+            {
+                await _roleManager.CreateAsync(new IdentityRole(UserRoles.Seller));
+            }
+            if (!await _roleManager.RoleExistsAsync(UserRoles.Customer))
+            {
+                await _roleManager.CreateAsync(new IdentityRole(UserRoles.Customer));
+            }
+            if (!await _roleManager.RoleExistsAsync(UserRoles.Admin))
+            {
+                await _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
+            }
+
+            await _userManager.AddToRoleAsync(user, UserRoles.Customer);
+
             return Ok(new Response { Status = "Success", Message = "User created successfully!" });
         }
 
@@ -105,18 +120,20 @@ namespace Marketplace.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User creation failed! Please check user details and try again." });
 
             if (!await _roleManager.RoleExistsAsync(UserRoles.Seller))
+            {
                 await _roleManager.CreateAsync(new IdentityRole(UserRoles.Seller));
+            }
             if (!await _roleManager.RoleExistsAsync(UserRoles.Customer))
+            {
                 await _roleManager.CreateAsync(new IdentityRole(UserRoles.Customer));
+            }
+            if (!await _roleManager.RoleExistsAsync(UserRoles.Admin))
+            {
+                await _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
+            }
 
-            if (await _roleManager.RoleExistsAsync(UserRoles.Seller))
-            {
-                await _userManager.AddToRoleAsync(user, UserRoles.Seller);
-            }
-            if (await _roleManager.RoleExistsAsync(UserRoles.Seller))
-            {
-                await _userManager.AddToRoleAsync(user, UserRoles.Customer);
-            }
+            await _userManager.AddToRoleAsync(user, UserRoles.Seller);
+
             return Ok(new Response { Status = "Success", Message = "User created successfully!" });
         }
 
