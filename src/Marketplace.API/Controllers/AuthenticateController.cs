@@ -1,5 +1,4 @@
-﻿using Marketplace.Application.Models;
-using Marketplace.Application.Helpers;
+﻿using Marketplace.Application.Helpers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -7,6 +6,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Marketplace.Application;
+using Marketplace.Application.Models.User;
 
 namespace Marketplace.API.Controllers
 {

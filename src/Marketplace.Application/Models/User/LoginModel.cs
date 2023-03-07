@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Marketplace.Application.Models
+namespace Marketplace.Application.Models.User
 {
     public class LoginModel
     {
