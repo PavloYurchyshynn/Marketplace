@@ -2,7 +2,7 @@
 
 namespace Marketplace.Application.Models.User
 {
-    public class RegisterModel
+    public class RegisterUserModel
     {
         [Required(ErrorMessage = "User Name is required")]
         public string? UserName { get; set; }

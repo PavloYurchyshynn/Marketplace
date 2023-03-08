@@ -1,7 +1,7 @@
-﻿using Marketplace.Application.Helpers;
+﻿using Marketplace.Application.Models.User;
+using Marketplace.Application.Services.Contracts;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel;
 
 namespace Marketplace.API.Controllers
 {
@@ -10,12 +10,14 @@ namespace Marketplace.API.Controllers
     public class UsersController : ControllerBase
     {
         private readonly UserManager<IdentityUser> _userManager;
-        private readonly IPasswordHasher<IdentityUser> _passwordHasher;
+        private readonly IUserService _userService;
 
-        public UsersController(UserManager<IdentityUser> userManager, IPasswordHasher<IdentityUser> passwordHasher)
+        public UsersController(
+            UserManager<IdentityUser> userManager, 
+            IUserService userService)
         {
             _userManager = userManager;
-            _passwordHasher = passwordHasher;
+            _userService = userService;
         }
 
         [HttpGet]
@@ -31,69 +33,31 @@ namespace Marketplace.API.Controllers
             }
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Update(Guid id, string email, string password)
+        [HttpPut]
+        public async Task<IActionResult> Update(Guid id, UpdateUserModel updateUserModel)
         {
-            var user = await _userManager.FindByIdAsync(id.ToString());
-            if (user != null)
+            try
             {
-                if (!string.IsNullOrEmpty(email))
-                {
-                    user.Email = email;
-                }
-                else
-                {
-                    return StatusCode(StatusCodes.Status422UnprocessableEntity, new Response { Status = "Error", Message = "Field cannot be empty" });
-                }
-
-                if (!string.IsNullOrEmpty(password))
-                {
-                    user.PasswordHash = _passwordHasher.HashPassword(user, password);
-                }
-                else
-                {
-                    return StatusCode(StatusCodes.Status422UnprocessableEntity, new Response { Status = "Error", Message = "Field cannot be empty" });
-                }
-
-                if (!string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(password))
-                {
-                    IdentityResult result = await _userManager.UpdateAsync(user);
-                    if (result.Succeeded)
-                    {
-                        return Ok(new Response { Status = "Success", Message = "User update successfully!" });
-                    }
-                    else
-                    {
-                        return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User updating failed! Please try again." });
-                    }
-                }
+                var updateUser = await _userService.UpdateAsync(id, updateUserModel);
+                return Ok(updateUser);
             }
-            else
+            catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status404NotFound, new Response { Status = "Error", Message = "User not found" });
+                return BadRequest(ex.Message);
             }
-            return Ok(user);
         }
 
         [HttpDelete]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var user = await _userManager.FindByIdAsync(id.ToString());
-            if (user != null)
+            try
             {
-                IdentityResult result = await _userManager.DeleteAsync(user);
-                if (result.Succeeded)
-                {
-                    return Ok(new Response { Status = "Success", Message = "User delete successfully!" });
-                }
-                else
-                {
-                    return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User deleting failed! Please try again." });
-                }
+                var status = await _userService.DeleteAsync(id);
+                return Ok(status);
             }
-            else
+            catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status404NotFound, new Response { Status = "Error", Message = "User not found" });
+                return BadRequest(ex.Message);
             }
         }
     }

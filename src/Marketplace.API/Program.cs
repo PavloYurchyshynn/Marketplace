@@ -13,6 +13,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddAuthSwagger();
 builder.Services.AddRepositories();
+builder.Services.AddServices();
 
 var app = builder.Build();
 

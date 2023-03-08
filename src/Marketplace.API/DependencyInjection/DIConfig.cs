@@ -1,4 +1,6 @@
-﻿using Marketplace.DataAccess.Persistence;
+﻿using Marketplace.Application.Services;
+using Marketplace.Application.Services.Contracts;
+using Marketplace.DataAccess.Persistence;
 using Marketplace.DataAccess.Repositories.Contracts;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +12,10 @@ namespace Marketplace.API.DependencyInjection
 {
     public static class DependencyInjectionConfiguration
     {
+        public static void AddServices(this IServiceCollection services)
+        {
+            services.AddScoped<IUserService, UserService>();
+        }
         public static void AddDatabase(this IServiceCollection services, IConfiguration configuration)
         {
             string? connection = configuration.GetConnectionString("DefaultConnection");
