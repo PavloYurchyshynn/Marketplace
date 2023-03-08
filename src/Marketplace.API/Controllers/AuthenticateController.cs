@@ -1,6 +1,6 @@
 ﻿using Marketplace.Application.Models.User;
 using Marketplace.Application.Services.Contracts;
-using Microsoft.AspNetCore.Identity;
+using Marketplace.Application;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Marketplace.API.Controllers
@@ -42,7 +42,7 @@ namespace Marketplace.API.Controllers
         {
             try
             {
-                var user = await _userService.RegisterAsync(model);
+                var user = await _userService.RegisterAsync(model, UserRoles.Customer);
                 return Ok(user);
             }
             catch (Exception ex)
@@ -57,7 +57,7 @@ namespace Marketplace.API.Controllers
         {
             try
             {
-                var user = await _userService.RegisterSellerAsync(model);
+                var user = await _userService.RegisterAsync(model, UserRoles.Seller);
                 return Ok(user);
             }
             catch (Exception ex)

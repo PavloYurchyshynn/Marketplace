@@ -65,7 +65,7 @@ namespace Marketplace.Application.Services
             };
         }
 
-        public async Task<RegisterUserModel> RegisterAsync([FromBody] RegisterUserModel model)
+        public async Task<RegisterUserModel> RegisterAsync([FromBody] RegisterUserModel model, string role)
         {
             var userExists = await _userManager.FindByNameAsync(model.UserName);
             if (userExists != null)
@@ -99,51 +99,7 @@ namespace Marketplace.Application.Services
                 await _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
             }
 
-            await _userManager.AddToRoleAsync(user, UserRoles.Customer);
-
-            return new RegisterUserModel
-            {
-                Email = model.Email,
-                Password = model.Password,
-                UserName = model.UserName
-            };
-        }
-
-        public async Task<RegisterUserModel> RegisterSellerAsync([FromBody] RegisterUserModel model)
-        {
-            var userExists = await _userManager.FindByNameAsync(model.UserName);
-            if (userExists != null)
-            {
-                throw new BadRequestException("User already exists!");
-            }
-
-            IdentityUser user = new()
-            {
-                Email = model.Email,
-                SecurityStamp = Guid.NewGuid().ToString(),
-                UserName = model.UserName
-            };
-
-            var result = await _userManager.CreateAsync(user, model.Password);
-            if (!result.Succeeded)
-            {
-                throw new BadRequestException("User creation failed! Please check user details and try again.");
-            }
-
-            if (!await _roleManager.RoleExistsAsync(UserRoles.Seller))
-            {
-                await _roleManager.CreateAsync(new IdentityRole(UserRoles.Seller));
-            }
-            if (!await _roleManager.RoleExistsAsync(UserRoles.Customer))
-            {
-                await _roleManager.CreateAsync(new IdentityRole(UserRoles.Customer));
-            }
-            if (!await _roleManager.RoleExistsAsync(UserRoles.Admin))
-            {
-                await _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
-            }
-
-            await _userManager.AddToRoleAsync(user, UserRoles.Seller);
+            await _userManager.AddToRoleAsync(user, role);
 
             return new RegisterUserModel
             {
@@ -219,7 +175,7 @@ namespace Marketplace.Application.Services
 
         private JwtSecurityToken GetToken(List<Claim> authClaims)
         {
-            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
+            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]!));
 
             var token = new JwtSecurityToken(
                     issuer: _configuration["JWT:ValidIssuer"],
