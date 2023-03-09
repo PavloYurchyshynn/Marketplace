@@ -2,6 +2,7 @@ using Marketplace.Application;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Marketplace.API.Controllers
 {
