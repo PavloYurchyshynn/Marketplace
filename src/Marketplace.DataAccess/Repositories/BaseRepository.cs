@@ -2,6 +2,7 @@
 using Marketplace.DataAccess.Persistence;
 using Marketplace.DataAccess.Repositories.Contracts;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace Marketplace.DataAccess.Repositories
@@ -44,7 +45,7 @@ namespace Marketplace.DataAccess.Repositories
 
             if (entity == null) throw new Exception();
 
-            return await DbSet.Where(predicate).FirstOrDefaultAsync();
+            return entity;
         }
 
         public async Task<TEntity> UpdateAsync(TEntity entity)

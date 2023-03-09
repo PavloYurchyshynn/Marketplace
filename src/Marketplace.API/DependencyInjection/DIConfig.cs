@@ -1,4 +1,6 @@
-﻿using Marketplace.DataAccess.Persistence;
+﻿using Marketplace.Application.Services;
+using Marketplace.Application.Services.Contracts;
+using Marketplace.DataAccess.Persistence;
 using Marketplace.DataAccess.Repositories.Contracts;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +12,11 @@ namespace Marketplace.API.DependencyInjection
 {
     public static class DependencyInjectionConfiguration
     {
+        public static void AddServices(this IServiceCollection services)
+        {
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IAuthService, AuthService>();
+        }
         public static void AddDatabase(this IServiceCollection services, IConfiguration configuration)
         {
             string? connection = configuration.GetConnectionString("DefaultConnection");
@@ -33,7 +40,7 @@ namespace Marketplace.API.DependencyInjection
                     ValidateAudience = false,
                     ValidAudience = configuration["JWT:ValidAudience"],
                     ValidIssuer = configuration["JWT:ValidIssuer"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]))
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]!))
                 };
             });
         }

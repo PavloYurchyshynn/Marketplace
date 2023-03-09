@@ -1,155 +1,68 @@
-﻿using Marketplace.Application.Models;
-using Marketplace.Application.Helpers;
-using Microsoft.AspNetCore.Identity;
+﻿using Marketplace.Application;
+using Marketplace.Application.Models.User;
+using Marketplace.Application.Services.Contracts;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using Marketplace.Application;
 
 namespace Marketplace.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api")]
     [ApiController]
     public class AuthenticateController : ControllerBase
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly IConfiguration _configuration;
+        private readonly IAuthService _authService;
 
-        public AuthenticateController(
-            UserManager<IdentityUser> userManager, 
-            RoleManager<IdentityRole> roleManager, 
-            IConfiguration configuration)
+        public AuthenticateController(IAuthService authService)
         {
-            _userManager = userManager;
-            _roleManager = roleManager;
-            _configuration = configuration;
+            _authService = authService;
         }
 
         [HttpPost]
         [Route("login")]
-        public async Task<IActionResult> Login([FromBody] LoginModel model)
+        public async Task<IActionResult> Login([FromBody] LoginUserModel model)
         {
-            var user = await _userManager.FindByNameAsync(model.Username);
-            if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
+            try
             {
-                var userRoles = await _userManager.GetRolesAsync(user);
-
-                var authClaims = new List<Claim>
+                var user = await _authService.LoginAsync(model);
+                if (user.Token == "Error")
                 {
-                    new Claim(ClaimTypes.Name, user.UserName),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-                };
-
-                foreach (var userRole in userRoles)
-                {
-                    authClaims.Add(new Claim(ClaimTypes.Role, userRole));
+                    return Unauthorized();
                 }
-
-                var token = GetToken(authClaims);
-
-                return Ok(new
-                {
-                    token = new JwtSecurityTokenHandler().WriteToken(token),
-                    expiration = token.ValidTo
-                });
+                return Ok(user);
             }
-
-            return Unauthorized();
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost]
         [Route("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterModel model)
+        public async Task<IActionResult> Register([FromBody] RegisterUserModel model)
         {
-            var userExists = await _userManager.FindByNameAsync(model.UserName);
-            if (userExists != null)
+            try
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User already exists!" });
+                var user = await _authService.RegisterAsync(model, UserRoles.Customer);
+                return Ok(user);
             }
-
-            IdentityUser user = new()
+            catch (Exception ex)
             {
-                Email = model.Email,
-                SecurityStamp = Guid.NewGuid().ToString(),
-                UserName = model.UserName
-            };
-
-            var result = await _userManager.CreateAsync(user, model.Password);
-            if (!result.Succeeded)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User creation failed! Please check user details and try again." });
+                return BadRequest(ex.Message);
             }
-
-            if (!await _roleManager.RoleExistsAsync(UserRoles.Seller))
-            {
-                await _roleManager.CreateAsync(new IdentityRole(UserRoles.Seller));
-            }
-            if (!await _roleManager.RoleExistsAsync(UserRoles.Customer))
-            {
-                await _roleManager.CreateAsync(new IdentityRole(UserRoles.Customer));
-            }
-            if (!await _roleManager.RoleExistsAsync(UserRoles.Admin))
-            {
-                await _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
-            }
-
-            await _userManager.AddToRoleAsync(user, UserRoles.Customer);
-
-            return Ok(new Response { Status = "Success", Message = "User created successfully!" });
         }
 
         [HttpPost]
-        [Route("register-seller")]
-        public async Task<IActionResult> RegisterSeller([FromBody] RegisterModel model)
+        [Route("seller/register")]
+        public async Task<IActionResult> RegisterSeller([FromBody] RegisterUserModel model)
         {
-            var userExists = await _userManager.FindByNameAsync(model.UserName);
-            if (userExists != null)
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User already exists!" });
-
-            IdentityUser user = new()
+            try
             {
-                Email = model.Email,
-                SecurityStamp = Guid.NewGuid().ToString(),
-                UserName = model.UserName
-            };
-            var result = await _userManager.CreateAsync(user, model.Password);
-            if (!result.Succeeded)
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User creation failed! Please check user details and try again." });
-
-            if (!await _roleManager.RoleExistsAsync(UserRoles.Seller))
-            {
-                await _roleManager.CreateAsync(new IdentityRole(UserRoles.Seller));
+                var user = await _authService.RegisterAsync(model, UserRoles.Seller);
+                return Ok(user);
             }
-            if (!await _roleManager.RoleExistsAsync(UserRoles.Customer))
+            catch (Exception ex)
             {
-                await _roleManager.CreateAsync(new IdentityRole(UserRoles.Customer));
+                return BadRequest(ex.Message);
             }
-            if (!await _roleManager.RoleExistsAsync(UserRoles.Admin))
-            {
-                await _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
-            }
-
-            await _userManager.AddToRoleAsync(user, UserRoles.Seller);
-
-            return Ok(new Response { Status = "Success", Message = "User created successfully!" });
-        }
-
-        private JwtSecurityToken GetToken(List<Claim> authClaims)
-        {
-            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
-
-            var token = new JwtSecurityToken(
-                    issuer: _configuration["JWT:ValidIssuer"],
-                    audience: _configuration["JWT:ValidAudience"],
-                    expires: DateTime.Now.AddDays(1),
-                    claims: authClaims,
-                    signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
-                );
-
-            return token;
         }
     }
 }
