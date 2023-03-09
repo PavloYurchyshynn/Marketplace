@@ -1,31 +1,27 @@
 ﻿using Marketplace.Application.Models.User;
 using Marketplace.Application.Services.Contracts;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Marketplace.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api")]
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly UserManager<IdentityUser> _userManager;
         private readonly IUserService _userService;
 
-        public UsersController(
-            UserManager<IdentityUser> userManager, 
-            IUserService userService)
+        public UsersController(IUserService userService)
         {
-            _userManager = userManager;
             _userService = userService;
         }
 
         [HttpGet]
+        [Route("users")]
         public IActionResult GetAllUsers()
         {
             try
             {
-                return Ok(_userManager.Users);
+                return Ok(_userService.GetAllAsync());
             }
             catch (Exception ex)
             {
@@ -34,6 +30,7 @@ namespace Marketplace.API.Controllers
         }
 
         [HttpPut]
+        [Route("users")]
         public async Task<IActionResult> Update(Guid id, UpdateUserModel updateUserModel)
         {
             try
@@ -48,6 +45,7 @@ namespace Marketplace.API.Controllers
         }
 
         [HttpDelete]
+        [Route("users")]
         public async Task<IActionResult> Delete(Guid id)
         {
             try

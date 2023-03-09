@@ -15,6 +15,7 @@ namespace Marketplace.API.DependencyInjection
         public static void AddServices(this IServiceCollection services)
         {
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IAuthService, AuthService>();
         }
         public static void AddDatabase(this IServiceCollection services, IConfiguration configuration)
         {

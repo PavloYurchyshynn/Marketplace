@@ -1,20 +1,19 @@
-﻿using Marketplace.Application.Models.User;
+﻿using Marketplace.Application;
+using Marketplace.Application.Models.User;
 using Marketplace.Application.Services.Contracts;
-using Marketplace.Application;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Marketplace.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api")]
     [ApiController]
     public class AuthenticateController : ControllerBase
     {
-        private readonly IUserService _userService;
+        private readonly IAuthService _authService;
 
-        public AuthenticateController(
-            IUserService userService)
+        public AuthenticateController(IAuthService authService)
         {
-            _userService = userService;
+            _authService = authService;
         }
 
         [HttpPost]
@@ -23,7 +22,7 @@ namespace Marketplace.API.Controllers
         {
             try
             {
-                var user = await _userService.LoginAsync(model);
+                var user = await _authService.LoginAsync(model);
                 if (user.Token == "Error")
                 {
                     return Unauthorized();
@@ -42,7 +41,7 @@ namespace Marketplace.API.Controllers
         {
             try
             {
-                var user = await _userService.RegisterAsync(model, UserRoles.Customer);
+                var user = await _authService.RegisterAsync(model, UserRoles.Customer);
                 return Ok(user);
             }
             catch (Exception ex)
@@ -52,12 +51,12 @@ namespace Marketplace.API.Controllers
         }
 
         [HttpPost]
-        [Route("register-seller")]
+        [Route("seller/register")]
         public async Task<IActionResult> RegisterSeller([FromBody] RegisterUserModel model)
         {
             try
             {
-                var user = await _userService.RegisterAsync(model, UserRoles.Seller);
+                var user = await _authService.RegisterAsync(model, UserRoles.Seller);
                 return Ok(user);
             }
             catch (Exception ex)
