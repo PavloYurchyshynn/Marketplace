@@ -2,6 +2,7 @@ using Marketplace.Application;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Marketplace.API.Controllers
 {
@@ -27,6 +28,7 @@ namespace Marketplace.API.Controllers
         [HttpGet(Name = "GetWeatherForecast")]
         public IEnumerable<WeatherForecast> Get()
         {
+            var id = User.Claims.FirstOrDefault(x => x.Type == "User id");
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
                 Date = DateTime.Now.AddDays(index),
