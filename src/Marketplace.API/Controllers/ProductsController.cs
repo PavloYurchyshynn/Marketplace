@@ -95,7 +95,7 @@ namespace Marketplace.API.Controllers
             }
         }
 
-        [HttpPost("/filter")]
+        [HttpPost("filter")]
         public IActionResult GetFilteredProducts(GetProductsFilter filter)
         {
             try
