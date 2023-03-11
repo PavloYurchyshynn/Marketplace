@@ -1,21 +1,23 @@
 ﻿using AutoMapper;
-using System.IdentityModel.Tokens.Jwt;
+using Marketplace.Application.Exceptions;
+using Marketplace.Application.Helpers;
 using Marketplace.Application.Models.Product;
 using Marketplace.Application.Services.Contracts;
 using Marketplace.Core.Entities;
 using Marketplace.DataAccess.Repositories.Contracts;
-using Marketplace.Application.Exceptions;
-using Marketplace.Application.Helpers;
+using Marketplace.Shared.Services.Contracts;
 
 namespace Marketplace.Application.Services
 {
     public class ProductService : IProductService
     {
+        private readonly IClaimService _claimService;
         private readonly IProductRepository _productRepository;
         private readonly IMapper _mapper;
 
-        public ProductService(IProductRepository productRepository, IMapper mapper)
+        public ProductService(IProductRepository productRepository, IMapper mapper, IClaimService claimService)
         {
+            _claimService = claimService;
             _productRepository = productRepository;
             _mapper = mapper;
         }
@@ -40,8 +42,9 @@ namespace Marketplace.Application.Services
             return _mapper.Map<ProductModel>(entity);
         }
 
-        public async Task<CreateProductModel> AddProductAsync(CreateProductModel createProductModel, string sellerId)
+        public async Task<CreateProductModel> AddProductAsync(CreateProductModel createProductModel)
         {
+            string sellerId = _claimService.GetUserId();
             var entity = _mapper.Map<Product>(createProductModel);
             if (entity == null)
             {
@@ -53,8 +56,9 @@ namespace Marketplace.Application.Services
             return _mapper.Map<CreateProductModel>(entity);
         }
 
-        public async Task<UpdateProductModel> UpdateProductAsync(Guid id, UpdateProductModel model, string sellerId)
+        public async Task<UpdateProductModel> UpdateProductAsync(Guid id, UpdateProductModel model)
         {
+            string sellerId = _claimService.GetUserId();
             var product = await _productRepository.GetFirstAsync(p => p.Id.ToString() == id.ToString());
 
             if (sellerId != product.SellerId.ToString())
@@ -71,8 +75,9 @@ namespace Marketplace.Application.Services
             return _mapper.Map<UpdateProductModel>(updatedProduct);
         }
 
-        public async Task<Response> DeleteProductAsync(Guid id, string sellerId)
+        public async Task<Response> DeleteProductAsync(Guid id)
         {
+            string sellerId = _claimService.GetUserId();
             var product = await _productRepository.GetFirstAsync(p => p.Id.ToString() == id.ToString());
 
             if (sellerId != product.SellerId.ToString())

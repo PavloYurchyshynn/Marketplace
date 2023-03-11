@@ -21,6 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Marketplace.Application\Marketplace.Application.csproj" />
     <ProjectReference Include="..\Marketplace.DataAccess\Marketplace.DataAccess.csproj" />
+    <ProjectReference Include="..\Marketplace.Shared\Marketplace.Shared.csproj" />
   </ItemGroup>
 
 </Project>

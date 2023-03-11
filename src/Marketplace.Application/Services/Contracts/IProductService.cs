@@ -7,8 +7,8 @@ namespace Marketplace.Application.Services.Contracts
     {
         IEnumerable<ProductModel> GetAllProducts();
         Task<ProductModel> GetProductById(Guid id);
-        Task<CreateProductModel> AddProductAsync(CreateProductModel model, string sellerId);
-        Task<UpdateProductModel> UpdateProductAsync(Guid id, UpdateProductModel model, string sellerId);
-        Task<Response> DeleteProductAsync(Guid id, string sellerId);
+        Task<CreateProductModel> AddProductAsync(CreateProductModel model);
+        Task<UpdateProductModel> UpdateProductAsync(Guid id, UpdateProductModel model);
+        Task<Response> DeleteProductAsync(Guid id);
     }
 }

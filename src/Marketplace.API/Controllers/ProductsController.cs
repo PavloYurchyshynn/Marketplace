@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Marketplace.API.Controllers
 {
     [Authorize]
-    [Route("api/product")]
+    [Route("api/products")]
     [ApiController]
     public class ProductsController : ControllerBase
     {
@@ -55,8 +55,7 @@ namespace Marketplace.API.Controllers
         {
             try
             {
-                var sellerId = User.Claims.First(x => x.Type == "User id").Value;
-                var product = await _productService.AddProductAsync(model, sellerId);
+                var product = await _productService.AddProductAsync(model);
                 return Ok(product);
             }
             catch (Exception ex)
@@ -72,8 +71,7 @@ namespace Marketplace.API.Controllers
         {
             try
             {
-                var sellerId = User.Claims.First(x => x.Type == "User id").Value;
-                var updatedProduct = await _productService.UpdateProductAsync(id, model, sellerId);
+                var updatedProduct = await _productService.UpdateProductAsync(id, model);
                 return Ok(updatedProduct);
             }
             catch (Exception ex)
@@ -88,8 +86,7 @@ namespace Marketplace.API.Controllers
         {
             try
             {
-                var sellerId = User.Claims.First(x => x.Type == "User id").Value;
-                var response = await _productService.DeleteProductAsync(id, sellerId);
+                var response = await _productService.DeleteProductAsync(id);
                 return Ok(response);
             }
             catch (Exception ex)
