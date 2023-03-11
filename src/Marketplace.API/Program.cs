@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddAutoMapper();
 builder.Services.AddDatabase(builder.Configuration);
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<MarketplaceContext>()
@@ -14,6 +15,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddAuthSwagger();
 builder.Services.AddRepositories();
 builder.Services.AddServices();
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 

@@ -1,4 +1,4 @@
-﻿using Marketplace.Application.Models.User;
+﻿using Marketplace.Application.Models.Auth;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Marketplace.Application.Services.Contracts

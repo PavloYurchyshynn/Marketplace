@@ -10,5 +10,6 @@ namespace Marketplace.DataAccess.Repositories.Contracts
         Task<TEntity> AddAsync(TEntity entity);
         Task<TEntity> UpdateAsync(TEntity entity);
         Task<TEntity> DeleteAsync(TEntity entity);
+        IQueryable<TEntity> GetAll(params Expression<Func<TEntity, object>>[] includes);
     }
 }

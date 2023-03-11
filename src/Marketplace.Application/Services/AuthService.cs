@@ -1,5 +1,5 @@
 ﻿using Marketplace.Application.Exceptions;
-using Marketplace.Application.Models.User;
+using Marketplace.Application.Models.Auth;
 using Marketplace.Application.Services.Contracts;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

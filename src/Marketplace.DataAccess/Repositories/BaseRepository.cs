@@ -55,5 +55,11 @@ namespace Marketplace.DataAccess.Repositories
 
             return entity;
         }
+
+        public IQueryable<TEntity> GetAll(params Expression<Func<TEntity, object>>[] includes)
+        {
+            var query = Context.Set<TEntity>().AsQueryable();
+            return includes.Aggregate(query, (q, w) => q.Include(w));
+        }
     }
 }

@@ -11,9 +11,10 @@ namespace Marketplace.Core.Entities
         public ICollection<Category>? Category { get; set; }
         public ICollection<Comment>? Comment { get; set; }
 
+        public Guid SellerId { get; set; }
         public string? Name { get; set; }
         public string? Description { get; set; }
-        [Column(TypeName = "decimal(10,2)")]
+        [Column(TypeName = "decimal(5,2)")]
         public decimal Price { get; set; }
         public int Rate { get; set; }
     }

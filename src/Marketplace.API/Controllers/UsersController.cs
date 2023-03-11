@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Marketplace.API.Controllers
 {
-    [Route("api")]
+    [Route("api/users")]
     [ApiController]
     public class UsersController : ControllerBase
     {
@@ -16,7 +16,7 @@ namespace Marketplace.API.Controllers
         }
 
         [HttpGet]
-        [Route("users")]
+        [Route("")]
         public IActionResult GetAllUsers()
         {
             try
@@ -30,7 +30,7 @@ namespace Marketplace.API.Controllers
         }
 
         [HttpPut]
-        [Route("users")]
+        [Route("{id}")]
         public async Task<IActionResult> Update(Guid id, UpdateUserModel updateUserModel)
         {
             try
@@ -45,7 +45,7 @@ namespace Marketplace.API.Controllers
         }
 
         [HttpDelete]
-        [Route("users")]
+        [Route("")]
         public async Task<IActionResult> Delete(Guid id)
         {
             try

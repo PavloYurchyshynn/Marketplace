@@ -1,7 +1,10 @@
-﻿using Marketplace.Application.Services;
+﻿using Marketplace.Application.MappingProfiles;
+using Marketplace.Application.Services;
 using Marketplace.Application.Services.Contracts;
 using Marketplace.DataAccess.Persistence;
 using Marketplace.DataAccess.Repositories.Contracts;
+using Marketplace.Shared.Services;
+using Marketplace.Shared.Services.Contracts;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -16,6 +19,12 @@ namespace Marketplace.API.DependencyInjection
         {
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IClaimService, ClaimService>();
+        }
+        public static void AddAutoMapper(this IServiceCollection services)
+        {
+            services.AddAutoMapper(typeof(ProductProfile).Assembly);
         }
         public static void AddDatabase(this IServiceCollection services, IConfiguration configuration)
         {

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Marketplace.Application.Models.User
+namespace Marketplace.Application.Models.Auth
 {
     public class RegisterUserModel
     {
