@@ -94,5 +94,19 @@ namespace Marketplace.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPost("/filter")]
+        public IActionResult GetFilteredProducts(GetProductsFilter filter)
+        {
+            try
+            {
+                var products = _productService.GetFilteredProducts(filter);
+                return Ok(products);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

@@ -89,5 +89,17 @@ namespace Marketplace.Application.Services
 
             return new Response { Status = "Success", Message = "Product delete successfully!" };
         }
+
+        public IEnumerable<ProductModel> GetFilteredProducts(GetProductsFilter getProductsFilter)
+        {
+            return _mapper.Map<IEnumerable<ProductModel>>(
+                getProductsFilter.FilterBy switch
+                {
+                    "Name" => _productRepository.GetWhere(x => x.Name == getProductsFilter.FilterValue).ToList(),
+                    "Rate" => _productRepository.GetWhere(x => (int)x.Rate == int.Parse(getProductsFilter.FilterValue)).ToList(),
+                    "Price" => _productRepository.GetWhere(x => (decimal)x.Price == decimal.Parse(getProductsFilter.FilterValue)).ToList(),
+                    _ => _productRepository.GetAll().AsParallel().ToList()
+                });
+        }
     }
 }
