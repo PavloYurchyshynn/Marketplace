@@ -1,4 +1,5 @@
-﻿using Marketplace.Application.Services;
+﻿using Marketplace.Application.MappingProfiles;
+using Marketplace.Application.Services;
 using Marketplace.Application.Services.Contracts;
 using Marketplace.DataAccess.Persistence;
 using Marketplace.DataAccess.Repositories.Contracts;
@@ -16,6 +17,11 @@ namespace Marketplace.API.DependencyInjection
         {
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IProductService, ProductService>();
+        }
+        public static void AddAutoMapper(this IServiceCollection services)
+        {
+            services.AddAutoMapper(typeof(ProductProfile).Assembly);
         }
         public static void AddDatabase(this IServiceCollection services, IConfiguration configuration)
         {
