@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Marketplace.Application.ErrorMessages;
 using Marketplace.Application.Exceptions;
 using Marketplace.Application.Helpers;
 using Marketplace.Application.Models.Product;
@@ -27,7 +28,7 @@ namespace Marketplace.Application.Services
             var products = _productRepository.GetAll().AsParallel().ToList();
             if (products == null)
             {
-                throw new Exception("Products not found");
+                throw new BadRequestException(CustomerErrorMessages.ProductsNotFound);
             }
             return _mapper.Map<IEnumerable<ProductModel>>(products);
         }
@@ -37,7 +38,7 @@ namespace Marketplace.Application.Services
             var entity = await _productRepository.GetFirstAsync(p => p.Id.ToString() == id.ToString());
             if (entity == null)
             {
-                throw new Exception("Product with this id not found");
+                throw new Exception(CustomerErrorMessages.ProductWithIdNotFound);
             }
             return _mapper.Map<ProductModel>(entity);
         }
@@ -63,7 +64,7 @@ namespace Marketplace.Application.Services
 
             if (sellerId != product.SellerId.ToString())
             {
-                throw new BadRequestException("The selected product does not belong to you");
+                throw new BadRequestException(CustomerErrorMessages.ProductDoesNotBelong);
             }
 
             product.Name = model.Name;
@@ -82,7 +83,7 @@ namespace Marketplace.Application.Services
 
             if (sellerId != product.SellerId.ToString())
             {
-                throw new BadRequestException("The selected product does not belong to you");
+                throw new BadRequestException(CustomerErrorMessages.ProductDoesNotBelong);
             }
 
             await _productRepository.DeleteAsync(product);
@@ -96,7 +97,7 @@ namespace Marketplace.Application.Services
 
             if (products.Count == 0)
             {
-                throw new BadRequestException("There are no products");
+                throw new BadRequestException(CustomerErrorMessages.ProductsNotFound);
             }
 
             return _mapper.Map<IEnumerable<ProductModel>>(products);
@@ -121,7 +122,7 @@ namespace Marketplace.Application.Services
 
             if (products.Count == 0)
             {
-                throw new BadRequestException("There are no products");
+                throw new BadRequestException(CustomerErrorMessages.ProductsNotFound);
             }
 
             return _mapper.Map<IEnumerable<ProductModel>>(products);

@@ -1,4 +1,5 @@
-﻿using Marketplace.Application.Exceptions;
+﻿using Marketplace.Application.ErrorMessages;
+using Marketplace.Application.Exceptions;
 using Marketplace.Application.Models.Auth;
 using Marketplace.Application.Services.Contracts;
 using Microsoft.AspNetCore.Identity;
@@ -68,7 +69,7 @@ namespace Marketplace.Application.Services
             var userExists = await _userManager.FindByNameAsync(model.UserName);
             if (userExists != null)
             {
-                throw new BadRequestException("User already exists!");
+                throw new BadRequestException(CustomerErrorMessages.UserAlreadyExists);
             }
 
             IdentityUser user = new()
@@ -81,7 +82,7 @@ namespace Marketplace.Application.Services
             var result = await _userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
             {
-                throw new BadRequestException("User creation failed! Please check user details and try again.");
+                throw new BadRequestException(CustomerErrorMessages.UserCreationFailed);
             }
 
             if (!await _roleManager.RoleExistsAsync(UserRoles.Seller))

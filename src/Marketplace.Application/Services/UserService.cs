@@ -1,4 +1,5 @@
-﻿using Marketplace.Application.Exceptions;
+﻿using Marketplace.Application.ErrorMessages;
+using Marketplace.Application.Exceptions;
 using Marketplace.Application.Helpers;
 using Marketplace.Application.Models.User;
 using Marketplace.Application.Services.Contracts;
@@ -36,13 +37,13 @@ namespace Marketplace.Application.Services
                     IdentityResult result = await _userManager.UpdateAsync(user);
                     if (!result.Succeeded)
                     {
-                        throw new BadRequestException("User updating failed! Please try again.");
+                        throw new BadRequestException(CustomerErrorMessages.UserUpdatingFailed);
                     }
                 }
             }
             else
             {
-                throw new NotFoundException("User not found");
+                throw new NotFoundException(CustomerErrorMessages.UserNotFound);
             }
             return new UpdateUserModel
             {
@@ -63,12 +64,12 @@ namespace Marketplace.Application.Services
                 }
                 else
                 {
-                    return new Response { Status = "Error", Message = "User deleting failed! Please try again." };
+                    return new Response { Status = "Error", Message = CustomerErrorMessages.UserDeletingFailed };
                 }
             }
             else
             {
-                return new Response { Status = "Error", Message = "User not found" };
+                return new Response { Status = "Error", Message = CustomerErrorMessages.UserNotFound };
             }
         }
     }
