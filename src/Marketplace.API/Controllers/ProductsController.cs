@@ -95,12 +95,42 @@ namespace Marketplace.API.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("seller/{id}")]
+
+        public IActionResult GetSellerProducts(Guid id)
+        {
+            try
+            {
+                var products = _productService.GetSellerProducts(id);
+                return Ok(products);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpPost("filter")]
         public IActionResult GetFilteredProducts(GetProductsFilter filter)
         {
             try
             {
                 var products = _productService.GetFilteredProducts(filter);
+                return Ok(products);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("search/{id}")]
+        public IActionResult SearchSellerProducts(Guid id, SearchProductModel model)
+        {
+            try
+            {
+                var products = _productService.SearchSellerProducts(id, model);
                 return Ok(products);
             }
             catch (Exception ex)

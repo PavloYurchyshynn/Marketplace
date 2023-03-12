@@ -90,6 +90,18 @@ namespace Marketplace.Application.Services
             return new Response { Status = "Success", Message = "Product delete successfully!" };
         }
 
+        public IEnumerable<ProductModel> GetSellerProducts(Guid id)
+        {
+            var products = _productRepository.GetWhere(p => p.SellerId.ToString() == id.ToString()).ToList();
+
+            if (products.Count == 0)
+            {
+                throw new BadRequestException("There are no products");
+            }
+
+            return _mapper.Map<IEnumerable<ProductModel>>(products);
+        }
+
         public IEnumerable<ProductModel> GetFilteredProducts(GetProductsFilter getProductsFilter)
         {
             return _mapper.Map<IEnumerable<ProductModel>>(
@@ -100,6 +112,19 @@ namespace Marketplace.Application.Services
                     "Price" => _productRepository.GetWhere(x => (decimal)x.Price == decimal.Parse(getProductsFilter.FilterValue)).ToList(),
                     _ => _productRepository.GetAll().AsParallel().ToList()
                 });
+        }
+
+        public IEnumerable<ProductModel> SearchSellerProducts(Guid id, SearchProductModel model)
+        {
+            var products = _productRepository.GetWhere(p => 
+                p.Name.Contains(model.Name) && p.SellerId.ToString() == id.ToString()).ToList();
+
+            if (products.Count == 0)
+            {
+                throw new BadRequestException("There are no products");
+            }
+
+            return _mapper.Map<IEnumerable<ProductModel>>(products);
         }
     }
 }
