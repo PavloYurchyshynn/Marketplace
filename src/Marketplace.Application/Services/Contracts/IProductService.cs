@@ -10,5 +10,9 @@ namespace Marketplace.Application.Services.Contracts
         Task<CreateProductModel> AddProductAsync(CreateProductModel model);
         Task<UpdateProductModel> UpdateProductAsync(Guid id, UpdateProductModel model);
         Task<Response> DeleteProductAsync(Guid id);
+        IEnumerable<ProductModel> GetProductsBySellerId(Guid id);
+        IEnumerable<ProductModel> GetFilteredProducts(GetProductsFilter getProductsFilter);
+        IEnumerable<ProductModel> SearchProductsBySellerId(Guid id, SearchProductModel model);
+
     }
 }

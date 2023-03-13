@@ -61,5 +61,8 @@ namespace Marketplace.DataAccess.Repositories
             var query = Context.Set<TEntity>().AsQueryable();
             return includes.Aggregate(query, (q, w) => q.Include(w));
         }
+
+        public IQueryable<TEntity> GetWhere(Expression<Func<TEntity, bool>> predicate) =>
+             Context.Set<TEntity>().Where(predicate).AsQueryable();
     }
 }
