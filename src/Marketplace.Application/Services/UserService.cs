@@ -37,13 +37,13 @@ namespace Marketplace.Application.Services
                     IdentityResult result = await _userManager.UpdateAsync(user);
                     if (!result.Succeeded)
                     {
-                        throw new BadRequestException(CustomerErrorMessages.UserUpdatingFailed);
+                        throw new BadRequestException(UserErrorMessages.UserUpdatingFailed);
                     }
                 }
             }
             else
             {
-                throw new NotFoundException(CustomerErrorMessages.UserNotFound);
+                throw new NotFoundException(UserErrorMessages.UserNotFound);
             }
             return new UpdateUserModel
             {
@@ -64,12 +64,12 @@ namespace Marketplace.Application.Services
                 }
                 else
                 {
-                    return new Response { Status = "Error", Message = CustomerErrorMessages.UserDeletingFailed };
+                    return new Response { Status = "Error", Message = UserErrorMessages.UserDeletingFailed };
                 }
             }
             else
             {
-                return new Response { Status = "Error", Message = CustomerErrorMessages.UserNotFound };
+                return new Response { Status = "Error", Message = UserErrorMessages.UserNotFound };
             }
         }
     }

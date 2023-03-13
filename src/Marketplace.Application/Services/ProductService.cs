@@ -28,7 +28,7 @@ namespace Marketplace.Application.Services
             var products = _productRepository.GetAll().AsParallel().ToList();
             if (products == null)
             {
-                throw new BadRequestException(CustomerErrorMessages.ProductsNotFound);
+                throw new NotFoundException(ProductErrorMessages.ProductsNotFound);
             }
             return _mapper.Map<IEnumerable<ProductModel>>(products);
         }
@@ -38,7 +38,7 @@ namespace Marketplace.Application.Services
             var entity = await _productRepository.GetFirstAsync(p => p.Id.ToString() == id.ToString());
             if (entity == null)
             {
-                throw new Exception(CustomerErrorMessages.ProductWithIdNotFound);
+                throw new Exception(ProductErrorMessages.ProductWithIdNotFound);
             }
             return _mapper.Map<ProductModel>(entity);
         }
@@ -64,7 +64,7 @@ namespace Marketplace.Application.Services
 
             if (sellerId != product.SellerId.ToString())
             {
-                throw new BadRequestException(CustomerErrorMessages.ProductDoesNotBelong);
+                throw new BadRequestException(ProductErrorMessages.ProductDoesNotBelong);
             }
 
             product.Name = model.Name;
@@ -83,7 +83,7 @@ namespace Marketplace.Application.Services
 
             if (sellerId != product.SellerId.ToString())
             {
-                throw new BadRequestException(CustomerErrorMessages.ProductDoesNotBelong);
+                throw new BadRequestException(ProductErrorMessages.ProductDoesNotBelong);
             }
 
             await _productRepository.DeleteAsync(product);
@@ -91,13 +91,13 @@ namespace Marketplace.Application.Services
             return new Response { Status = "Success", Message = "Product delete successfully!" };
         }
 
-        public IEnumerable<ProductModel> GetSellerProducts(Guid id)
+        public IEnumerable<ProductModel> GetProductsBySellerId(Guid id)
         {
-            var products = _productRepository.GetWhere(p => p.SellerId.ToString() == id.ToString()).ToList();
+            var products = _productRepository.GetWhere(p => p.SellerId == id).ToList();
 
             if (products.Count == 0)
             {
-                throw new BadRequestException(CustomerErrorMessages.ProductsNotFound);
+                throw new NotFoundException(ProductErrorMessages.ProductsNotFound);
             }
 
             return _mapper.Map<IEnumerable<ProductModel>>(products);
@@ -105,6 +105,11 @@ namespace Marketplace.Application.Services
 
         public IEnumerable<ProductModel> GetFilteredProducts(GetProductsFilter getProductsFilter)
         {
+            if (getProductsFilter.FilterValue == null)
+            {
+                throw new BadRequestException(ProductErrorMessages.FieldCanNotBeEmpty);
+            }
+
             return _mapper.Map<IEnumerable<ProductModel>>(
                 getProductsFilter.FilterBy switch
                 {
@@ -115,14 +120,19 @@ namespace Marketplace.Application.Services
                 });
         }
 
-        public IEnumerable<ProductModel> SearchSellerProducts(Guid id, SearchProductModel model)
+        public IEnumerable<ProductModel> SearchProductsBySellerId(Guid id, SearchProductModel model)
         {
+            if (model.Name == null)
+            {
+                throw new BadRequestException(ProductErrorMessages.FieldCanNotBeEmpty);
+            }
+
             var products = _productRepository.GetWhere(p => 
-                p.Name.Contains(model.Name) && p.SellerId.ToString() == id.ToString()).ToList();
+                p.Name.Contains(model.Name) && p.SellerId == id).ToList();
 
             if (products.Count == 0)
             {
-                throw new BadRequestException(CustomerErrorMessages.ProductsNotFound);
+                throw new NotFoundException(ProductErrorMessages.ProductsNotFound);
             }
 
             return _mapper.Map<IEnumerable<ProductModel>>(products);

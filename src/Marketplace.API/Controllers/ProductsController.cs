@@ -96,13 +96,13 @@ namespace Marketplace.API.Controllers
         }
 
         [HttpGet]
-        [Route("seller/{id}")]
+        [Route("seller/{sellerId}")]
 
-        public IActionResult GetSellerProducts(Guid id)
+        public IActionResult GetSellerProducts(Guid sellerId)
         {
             try
             {
-                var products = _productService.GetSellerProducts(id);
+                var products = _productService.GetProductsBySellerId(sellerId);
                 return Ok(products);
             }
             catch (Exception ex)
@@ -125,12 +125,12 @@ namespace Marketplace.API.Controllers
             }
         }
 
-        [HttpPost("search/{id}")]
-        public IActionResult SearchSellerProducts(Guid id, SearchProductModel model)
+        [HttpPost("search/{sellerId}")]
+        public IActionResult SearchSellerProducts(Guid sellerId, SearchProductModel model)
         {
             try
             {
-                var products = _productService.SearchSellerProducts(id, model);
+                var products = _productService.SearchProductsBySellerId(sellerId, model);
                 return Ok(products);
             }
             catch (Exception ex)

@@ -69,7 +69,7 @@ namespace Marketplace.Application.Services
             var userExists = await _userManager.FindByNameAsync(model.UserName);
             if (userExists != null)
             {
-                throw new BadRequestException(CustomerErrorMessages.UserAlreadyExists);
+                throw new BadRequestException(UserErrorMessages.UserAlreadyExists);
             }
 
             IdentityUser user = new()
@@ -82,7 +82,7 @@ namespace Marketplace.Application.Services
             var result = await _userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
             {
-                throw new BadRequestException(CustomerErrorMessages.UserCreationFailed);
+                throw new BadRequestException(UserErrorMessages.UserCreationFailed);
             }
 
             if (!await _roleManager.RoleExistsAsync(UserRoles.Seller))
